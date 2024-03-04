@@ -25,6 +25,7 @@ def generate_pdf(pdf_filename):
         os.remove(stave_image_path)  # Clean up the temporary image file
     c.save()
 
+
 def display_preview(window, pdf_filename):
     # Convert the first page of the PDF to an image for preview
     os.system(f"magick convert -density 150 {pdf_filename}[0] preview.png")
