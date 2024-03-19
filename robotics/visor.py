@@ -3,13 +3,25 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import threading
+import time  # Import the time module
 
 def take_photo():
     cap = cv2.VideoCapture(0)
+    
+    if not cap.isOpened():
+        print("Cannot open camera")
+        return
+
+    # Add a warm-up period
+    time.sleep(2)  # Sleep for 2 seconds
     ret, frame = cap.read()
+    
     if ret:
         cv2.imwrite('photo.jpg', frame)
         show_photo('photo.jpg')
+    else:
+        print("Failed to capture image")
+        
     cap.release()
 
 def show_photo(photo_path):
@@ -21,6 +33,11 @@ def show_photo(photo_path):
 
 def record_video():
     cap = cv2.VideoCapture(0)
+    
+    if not cap.isOpened():
+        print("Cannot open camera")
+        return
+
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter('video.avi', fourcc, 20.0, (640, 480))
 
@@ -33,6 +50,7 @@ def record_video():
                 break
 
     threading.Thread(target=recording).start()
+    cap.release()
 
 def toggle_recording():
     if recording_btn['text'] == 'Record Video':
@@ -40,6 +58,9 @@ def toggle_recording():
         record_video()
     else:
         recording_btn['text'] = 'Record Video'
+        # The camera and video writer need to be released when done recording.
+        # You may need to handle this in the `recording` function above, 
+        # depending on how you want to manage the recording state.
 
 app = tk.Tk()
 app.title("Webcam Capture")
