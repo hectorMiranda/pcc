@@ -14,7 +14,7 @@ def take_photo():
 
 def show_photo(photo_path):
     img = Image.open(photo_path)
-    img = img.resize((640, 480), Image.ANTIALIAS)
+    img = img.resize((640, 480), Image.Resampling.LANCZOS)
     img = ImageTk.PhotoImage(img)
     panel.configure(image=img)
     panel.image = img
